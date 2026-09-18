@@ -549,7 +549,7 @@
         <ul class="rune-list">
           <li>You officially spawned into this world on March 4th.</li>
           <li>You are obsessed with the song <em>Banjara</em> (if I'm wrong about this, please don't kill me).</li>
-          <li>You and your mom form a highly dangerous, elite gossip duo.</li>
+          <li>You gossips with your mom🤭</li>
           <li>You have serious mood swings, and that one boy in coaching who roasted your height was clearly playing with fire...</li>
           <li>...but underneath it all, you're a massive empath (who still cares deeply about a friend lost to a silly misunderstanding) and actually ridiculously sweet.</li>
         </ul>
@@ -604,8 +604,8 @@
         <p class="reveal-line t-6">But when we finally spoke... and you swallowed your pride to apologize...</p>
         <p class="reveal-line t-7 highlight">...and told me that just me reaching out made your day "Good"...</p>
         <p class="reveal-line t-8">...it completely melted all my annoyance away.</p>
-        <p class="reveal-line t-9">That is why I promised you that day I would never ignore your messages again.</p>
-        <p class="reveal-line t-10 highlight">And it is a promise I intend to keep forever.</p>
+        <p class="reveal-line t-9">Then you asked me... for a promise</p>
+        <p class="reveal-line t-10 highlight">A promise to not ignore your message...And it is a promise I intend to keep forever.</p>
       </div>
 
     </div>
@@ -658,7 +658,7 @@
         <p class="f-line show-1">My biggest wish for you is simple:</p>
         <p class="f-line show-2">I want you to build exactly the life you want, exactly the way you want to live it.</p>
         <p class="f-line show-3">May you find wild success, and may you always be surrounded by people who love and cherish you.</p>
-        <p class="f-line show-4 highlight">No matter where our separate paths take us in the future, I will always be rooting for you.</p>
+        <p class="f-line show-4 highlight">No matter where our paths take us in the future, I will always be rooting for you.</p>
       </div>
 
       <div class="finale-cloud-layer fc-left"></div>
@@ -988,7 +988,7 @@
 
     async function startTypingRoast() {
       const textContainer = document.getElementById("dynamic-text");
-      const phrases = [ "Tumhara reply type ho raha hai...", "Wait... lagta hai phir se backspace daba diya.", "Itna kya soch rahe ho?", "Mai bhi eise hi wait karta hun jab slow reply karte ho.", "Aaj tum tumhara khud ka roop dekhogi 🐢" ];
+      const phrases = [ "Tumhara reply type ho raha hai...", "Wait... lagta hai phir se backspace daba diya.", "Itna kya soch rahe ho?", "Mai bhi eise hi wait karta hun jab slow reply karte ho.", "Aaj tum khud feel kro ye speed 🐢" ];
       const typeText = async (text) => { textContainer.innerHTML = ""; for (let i = 0; i < text.length; i++) { textContainer.innerHTML = text.substring(0, i + 1) + "<span class='cursor'></span>"; await new Promise(r => setTimeout(r, 55)); } };
       const deleteText = async (text) => { for (let i = text.length; i >= 0; i--) { textContainer.innerHTML = text.substring(0, i) + "<span class='cursor'></span>"; await new Promise(r => setTimeout(r, 25)); } };
       for (let i = 0; i < phrases.length; i++) {
