@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A Journey Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Nunito:wght@600;800;900&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       BASE & LOCK SCREEN
+       ========================================= */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #050511; overflow: hidden; color: #ffffff; transition: background-color 1.5s ease; }
+
+    .aurora-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 0; transition: opacity 1.5s ease; }
+    .aurora-blob { position: absolute; border-radius: 50%; will-change: transform; animation: drift 8s infinite alternate ease-in-out; }
+    .blob-1 { background: radial-gradient(circle, rgba(255, 42, 95, 0.45) 0%, rgba(255, 42, 95, 0) 70%); width: 120vw; height: 120vw; top: -30%; left: -20%; }
+    .blob-2 { background: radial-gradient(circle, rgba(105, 25, 255, 0.55) 0%, rgba(105, 25, 255, 0) 70%); width: 130vw; height: 130vw; bottom: -40%; right: -30%; animation-delay: -3s; }
+    .blob-3 { background: radial-gradient(circle, rgba(255, 170, 0, 0.35) 0%, rgba(255, 170, 0, 0) 70%); width: 100vw; height: 100vw; top: 20%; left: 20%; animation-delay: -6s; }
+    @keyframes drift { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(10vw, -5vh, 0) scale(1.15); } 100% { transform: translate3d(-5vw, 10vh, 0) scale(0.9); } }
+
+    .floaty { position: absolute; font-size: 1.2rem; opacity: 0; animation: floatUp 4s infinite ease-in-out; z-index: 1; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+    .f1 { left: 10%; animation-delay: 0s; content: "🥕"; } .f2 { left: 85%; font-size: 0.9rem; animation-delay: 1.5s; } .f3 { left: 45%; font-size: 1.5rem; animation-delay: 2.5s; }
+    @keyframes floatUp { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 20% { opacity: 0.4; } 80% { opacity: 0.4; } 100% { transform: translateY(-10vh) rotate(60deg); opacity: 0; } }
+
+    .card-container { position: relative; z-index: 10; width: 85%; max-width: 320px; margin-top: 60px; transition: all 0.6s ease; }
+    .peeking-bunny { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; animation: peekUp 5s infinite ease-in-out; }
+    .ears { display: flex; gap: 15px; margin-bottom: -15px; z-index: 4; }
+    .ear { width: 22px; height: 60px; background: #ffffff; border-radius: 50% 50% 10px 10px; position: relative; box-shadow: inset 0 0 10px rgba(255, 42, 95, 0.2); }
+    .ear::after { content: ''; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 10px; height: 40px; background: #ffb6c1; border-radius: 50% 50% 5px 5px; }
+    .ear.left { transform: rotate(-15deg); } .ear.right { transform: rotate(15deg); }
+    .head { width: 74px; height: 64px; background: #ffffff; border-radius: 50% 50% 40% 40%; position: relative; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); z-index: 6; }
+    .eyes { display: flex; justify-content: center; gap: 16px; padding-top: 22px; }
+    .eye { width: 8px; height: 8px; background: #111; border-radius: 50%; animation: blink 4s infinite; }
+    .cheeks { position: absolute; top: 32px; width: 100%; display: flex; justify-content: space-around; padding: 0 12px; box-sizing: border-box; }
+    .cheek { width: 10px; height: 6px; background: #ff8da1; border-radius: 50%; opacity: 0.6; filter: blur(1px); }
+    .whiskers-left, .whiskers-right { position: absolute; top: 32px; display: flex; flex-direction: column; gap: 3px; }
+    .whiskers-left { left: -6px; } .whiskers-right { right: -6px; }
+    .whisker { width: 14px; height: 1px; background: rgba(0,0,0,0.15); }
+    .whiskers-left .w1 { transform: rotate(10deg); } .whiskers-left .w3 { transform: rotate(-10deg); }
+    .whiskers-right .w1 { transform: rotate(-10deg); } .whiskers-right .w3 { transform: rotate(10deg); }
+    .nose { position: absolute; top: 36px; left: 50%; transform: translateX(-50%); width: 7px; height: 5px; background: #ffb6c1; border-radius: 50%; }
+    @keyframes peekUp { 0%, 100% { transform: translate(-50%, 40px); } 40%, 60% { transform: translate(-50%, -100px); } }
+    @keyframes blink { 0%, 48%, 52%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.1); } }
+    .bunny-paws { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); display: flex; gap: 34px; z-index: 12; animation: peekPaws 5s infinite ease-in-out; }
+    .paw-grip { width: 20px; height: 14px; background: #ffffff; border-radius: 10px 10px 15px 15px; box-shadow: 0 3px 5px rgba(0,0,0,0.15), inset 0 -2px 3px rgba(0,0,0,0.05); }
+    @keyframes peekPaws { 0%, 100% { transform: translate(-50%, 20px); opacity: 0; } 40%, 60% { transform: translate(-50%, 0px); opacity: 1; } }
+
+    .glass-card { position: relative; z-index: 10; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 30px; padding: 35px 25px; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3); transition: all 0.4s ease; }
+    h2 { font-size: 1.6rem; font-weight: 800; margin-top: 15px; margin-bottom: 5px; background: linear-gradient(135deg, #ffffff 0%, #ffdf00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3)); }
+    p { color: rgba(255, 255, 255, 0.9); font-size: 1.05rem; margin-bottom: 25px; line-height: 1.4; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
+    .input-wrapper { position: relative; margin-bottom: 20px; }
+    input[type="text"] { width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; color: #fff; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 600; padding: 14px 15px; text-align: center; outline: none; transition: all 0.2s ease; }
+    input[type="text"]:focus { background: rgba(255, 255, 255, 0.15); border-color: #ffaa00; box-shadow: 0 0 10px rgba(255, 170, 0, 0.4); }
+    input[type="text"]::placeholder { color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+    button.unlock-btn { background: linear-gradient(45deg, #ff2a5f, #6919ff); color: white; border: none; border-radius: 50px; width: 100%; padding: 14px; font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: transform 0.1s; box-shadow: 0 8px 20px rgba(105, 25, 255, 0.4); }
+    button.unlock-btn:active { transform: scale(0.92); }
+    #message { margin-top: 15px; height: 18px; font-size: 0.95rem; font-weight: 800; transition: opacity 0.2s; opacity: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    
+    .error-shake { animation: fast-shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes fast-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-4px); } }
+
+    /* =========================================
+       TYPING SIMULATOR
+       ========================================= */
+    #typing-container { display: none; position: relative; z-index: 10; text-align: center; width: 90%; max-width: 350px; }
+    .chat-header { font-size: 0.8rem; color: rgba(255, 255, 255, 0.4); margin-bottom: 8px; text-align: left; padding-left: 65px; opacity: 0; animation: floatIn 0.8s forwards; }
+    .typing-layout { display: flex; align-items: flex-end; gap: 15px; margin-bottom: 30px; justify-content: center; opacity: 0; transform: translateY(20px); animation: floatIn 0.8s forwards 0.2s; }
+    .profile-pic-container { position: relative; }
+    .profile-pic { width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); border: 2px solid rgba(255,255,255,0.2); }
+    .online-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background-color: #10b981; border: 2px solid #050511; border-radius: 50%; box-shadow: 0 0 8px rgba(16, 185, 129, 0.8); }
+    .chat-bubble { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 25px 25px 25px 5px; padding: 18px 24px; display: flex; gap: 8px; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.8); border-radius: 50%; animation: typeBounce 1.8s infinite ease-in-out; }
+    .d1 { animation-delay: 0s; } .d2 { animation-delay: 0.3s; } .d3 { animation-delay: 0.6s; }
+    @keyframes typeBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-7px); opacity: 1; } }
+    @keyframes floatIn { to { opacity: 1; transform: translateY(0); } }
+    #dynamic-text { font-size: 1.4rem; color: #ffaa00; margin-bottom: 8px; min-height: 80px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: opacity 0.5s ease; font-weight: 700; }
+    .cursor { display: inline-block; width: 3px; background-color: #fff; animation: blinkCursor 0.8s infinite; height: 22px; vertical-align: middle; margin-left: 4px; }
+    @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* =========================================
+       CINEMATIC MAP SYSTEM 
+       ========================================= */
+    #map-viewport { display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: 20; opacity: 0; transition: opacity 1.5s ease; background-color: #050511; }
+    .ambient-dust-layer { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 22; opacity: 0.6; background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.25) 1px, transparent 2px), radial-gradient(circle at 80% 60%, rgba(255, 255, 255, 0.2) 2px, transparent 3px), radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.3) 1px, transparent 2px); background-size: 150px 150px; animation: driftDust 40s linear infinite; }
+    @keyframes driftDust { 0% { transform: translateY(0) translateX(0); } 100% { transform: translateY(-150px) translateX(100px); } }
+
+    #map-canvas { position: absolute; top: 0; left: 0; width: 4000px; height: 4000px; background-image: url('Generated Image September 16, 2026 - 11_37PM.jpg'); background-size: cover; background-position: center; transform-origin: 0 0; transition: none; filter: blur(0px) brightness(1); }
+    .sun-flare { position: absolute; top: 10%; left: 10%; width: 800px; height: 800px; background: radial-gradient(circle, rgba(255, 240, 180, 0.5) 0%, rgba(255, 210, 100, 0.15) 35%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 5; mix-blend-mode: screen; animation: pulseSun 6s infinite alternate ease-in-out; }
+    @keyframes pulseSun { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; } }
+    
+    .dynamic-cloud { position: absolute; background: #ffffff; border-radius: 100px; filter: blur(25px); opacity: 0.4; pointer-events: none; z-index: 6; animation: cloudDrift linear infinite; }
+    @keyframes cloudDrift { from { transform: translateX(-800px); } to { transform: translateX(5000px); } }
+    .dc-1 { top: 18%; width: 600px; height: 200px; animation-duration: 220s; } .dc-2 { top: 35%; width: 450px; height: 150px; animation-duration: 180s; animation-delay: -50s; opacity: 0.25; } .dc-3 { top: 12%; width: 800px; height: 250px; animation-duration: 280s; animation-delay: -140s; opacity: 0.3; }
+
+    .bird-flock { position: absolute; top: 35%; left: 0; z-index: 15; pointer-events: none; animation: flockFly 100s linear infinite; }
+    @keyframes flockFly { from { transform: translate(-300px, 200px) scale(0.6); } to { transform: translate(4500px, -400px) scale(0.6); } }
+    .bird { position: absolute; width: 40px; height: 20px; fill: none; stroke: rgba(30, 20, 10, 0.7); stroke-width: 3.5; stroke-linecap: round; animation: wingFlap 0.7s infinite alternate ease-in-out; }
+    .bird path { d: path("M 0 10 Q 10 0 20 10 Q 30 0 40 10"); }
+    .b1 { top: 0; left: 0; animation-delay: 0s; } .b2 { top: 30px; left: -45px; animation-delay: -0.2s; }
+    .b3 { top: -20px; left: -50px; animation-delay: -0.4s; } .b4 { top: 50px; left: -80px; animation-delay: -0.6s; }
+    @keyframes wingFlap { 0% { transform: scaleY(1); } 100% { transform: scaleY(0.3); } }
+
+    .waypoint-marker { position: absolute; transform: translate(-50%, -50%); z-index: 25; pointer-events: none; display: flex; flex-direction: column; align-items: center; opacity: 0; transition: opacity 0.5s ease, transform 0.5s ease; }
+    .waypoint-marker.active { opacity: 1; pointer-events: auto; cursor: pointer; }
+    .rhombus-crystal { width: 30px; height: 50px; background: #ffffff; clip-path: polygon(50% 0%, 100% 25%, 50% 100%, 0% 25%); filter: drop-shadow(0 0 15px rgba(255,255,255,1)) drop-shadow(0 0 30px rgba(255,255,255,0.8)); animation: floatCrystal 2.5s infinite ease-in-out; margin-bottom: 10px; transition: transform 0.2s; }
+    .waypoint-marker.active:hover .rhombus-crystal { transform: scale(1.15); filter: drop-shadow(0 0 25px rgba(255,255,255,1)) drop-shadow(0 0 40px #ffdf00); }
+    @keyframes floatCrystal { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .ground-glow { width: 14px; height: 6px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 20px 8px rgba(255, 255, 255, 0.9); animation: pulseGlow 2.5s infinite ease-in-out; }
+    @keyframes pulseGlow { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.4); opacity: 1; } }
+
+    /* =========================================
+       UI LAYER & RESPONSIVE FLEX AVATARS
+       ========================================= */
+    #ui-layer { position: absolute; bottom: 8%; left: 0; width: 100vw; z-index: 30; display: flex; flex-direction: column; align-items: center; transition: opacity 0.4s ease; }
+    #dialogue-container { width: 100vw; max-width: 400px; margin-bottom: 15px; position: relative; pointer-events: none; }
+    .dialogue-state { display: none; justify-content: center; gap: 15px; width: 100%; padding: 0 10px; }
+    .dialogue-state.active { display: flex; }
+    .companion-wrapper { display: flex; flex-direction: column; align-items: center; flex: 1; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; pointer-events: none; }
+    .companion-wrapper.show { opacity: 1; transform: translateY(0); }
+    .character-portrait { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #ffdf00; box-shadow: 0 0 15px rgba(255, 223, 0, 0.6), inset 0 0 10px rgba(0,0,0,0.8); object-fit: cover; background-color: #2b0d0d; background-image: radial-gradient(circle at top, #5d4037, #1a0505); z-index: 2; }
+    .tort-port { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.6), inset 0 0 10px rgba(0,0,0,0.8); }
+    .speech-bubble { background: #fdfaf2; color: #3e2723; border: 2px solid #5d4037; padding: 8px 12px; border-radius: 15px; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 0.85rem; box-shadow: 4px 4px 0 rgba(0,0,0,0.4); position: relative; margin-bottom: 12px; text-align: center; white-space: normal; line-height: 1.2; }
+    .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: #fdfaf2 transparent transparent transparent; z-index: 2; }
+    .speech-bubble::before { content: ''; position: absolute; bottom: -13px; left: 50%; transform: translateX(-50%); border-width: 12px 12px 0; border-style: solid; border-color: #5d4037 transparent transparent transparent; z-index: 1; }
+    
+    .nav-buttons-container { display: flex; gap: 15px; pointer-events: auto; align-items: center; }
+    .nav-btn { background: #fdfaf2; color: #3e2723; border: 2px solid #5d4037; border-radius: 4px; padding: 14px 35px; font-family: 'Courier Prime', monospace; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.6); transition: all 0.3s ease; opacity: 0; transform: translateY(30px); pointer-events: none; display: none; }
+    .nav-btn:active { transform: translateY(20px) translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); }
+    .nav-btn.show { opacity: 1; transform: translateY(0); pointer-events: auto; display: block; }
+    
+    .nav-btn-back { background: rgba(5, 5, 17, 0.8); color: #fdfaf2; border: 2px solid #fdfaf2; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8); padding: 10px 20px; font-size: 0.85rem; }
+
+    /* =========================================
+       BLUSH REQUEST CARD
+       ========================================= */
+    .blush-card { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%) translateY(50px); opacity: 0; pointer-events: none; transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1); z-index: 40; width: 90%; max-width: 350px; padding: 25px; }
+    .blush-card.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+    .blush-card p { margin-bottom: 15px; }
+    #blush-error { color: #ff2a5f; margin-top: 10px; font-weight: bold; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+    
+    @keyframes card-shake {
+       0%, 100% { transform: translateX(-50%) translateY(0); }
+       25% { transform: translateX(calc(-50% - 6px)) translateY(0); }
+       50% { transform: translateX(calc(-50% + 6px)) translateY(0); }
+       75% { transform: translateX(calc(-50% - 4px)) translateY(0); }
+    }
+    .card-error-shake { animation: card-shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+
+    .fold-envelope { animation: envelopeFold 1.8s forwards ease-in-out; }
+    @keyframes envelopeFold {
+      0% { transform: translateX(-50%) scale(1); opacity: 1; }
+      40% { transform: translateX(-50%) scale(0.1) rotateX(180deg); background: #fdfaf2; opacity: 1; border-radius: 5px; box-shadow: 0 0 20px #ffdf00; }
+      100% { transform: translate(-50%, -600px) scale(0.05) rotateX(180deg); opacity: 0; }
+    }
+
+    /* =========================================
+       FREE ROAM NOTIFICATION
+       ========================================= */
+    .free-roam-toast { position: absolute; top: 12%; left: 50%; transform: translate(-50%, -20px); background: linear-gradient(135deg, #ffdf00, #ffaa00); color: #111; padding: 12px 30px; border-radius: 30px; font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 900; opacity: 0; pointer-events: none; transition: all 0.5s ease; z-index: 50; box-shadow: 0 5px 25px rgba(255,223,0,0.6); text-transform: uppercase; letter-spacing: 1px; }
+    .free-roam-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* =========================================
+       MODAL OVERLAY & GLOBAL BUTTON
+       ========================================= */
+    #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 4, 8, 0.9); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; opacity: 0; transition: opacity 0.5s ease; cursor: pointer; }
+    .btn-close-modal { color: #fff; border: 2px solid #111; border-radius: 25px; padding: 12px 30px; margin-top: 15px; font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; transition: all 0.2s; z-index: 10; position: relative; }
+    .btn-close-modal:active { transform: translateY(4px); box-shadow: 0 2px 5px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.2); }
+    .modal-content-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.9); z-index: 105; flex-direction: column; align-items: center; width: 95%; opacity: 0; transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+    .modal-content-box.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    /* =========================================
+       ISLAND 1: THE LIGHTHOUSE
+       ========================================= */
+    #lighthouse-modal { max-width: 380px; }
+    .lh-beam { position: absolute; top: 50px; left: 50%; width: 600px; height: 120px; background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent 70%); clip-path: polygon(0 50%, 100% 0, 100% 100%); transform-origin: left center; animation: sweepBeam 4s infinite alternate ease-in-out; z-index: 0; pointer-events: none; }
+    @keyframes sweepBeam { 0% { transform: translateX(-2%) rotate(-12deg); opacity: 0.4; } 100% { transform: translateX(-2%) rotate(12deg); opacity: 0.8; } }
+    .lh-roof-cap { width: 14px; height: 14px; background: linear-gradient(to right, #4a1c1c, #ff5252, #4a1c1c); border-radius: 50%; z-index: 5; margin-bottom: -5px; box-shadow: inset -2px -2px 4px rgba(0,0,0,0.5); }
+    .lh-roof { width: 130px; height: 65px; background: linear-gradient(to right, #2b0d0d 0%, #b71c1c 40%, #ff5252 50%, #b71c1c 70%, #1a0505 100%); clip-path: polygon(50% 0%, 100% 100%, 0% 100%); z-index: 4; }
+    .lh-lantern { width: 110px; height: 70px; background: repeating-linear-gradient(90deg, transparent, transparent 25px, #111 25px, #111 30px), linear-gradient(to right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 20%, transparent 50%, rgba(255,255,255,0.3) 80%, rgba(255,255,255,0.6) 100%), rgba(50,50,50,0.8); border: 4px solid #222; border-bottom: none; display: flex; justify-content: center; align-items: center; z-index: 3; box-shadow: 0 0 25px rgba(255,240,150,0.8); }
+    .lh-light-core { width: 35px; height: 50px; background: #fff; border-radius: 20px; box-shadow: 0 0 40px 20px #ffdf00, 0 0 80px 40px #ffffff; animation: pulseCore 2s infinite alternate; }
+    @keyframes pulseCore { 0% { opacity: 0.8; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+    .lh-gallery { width: 150px; height: 12px; background: linear-gradient(to right, #222, #555, #222); border-radius: 4px; z-index: 4; box-shadow: 0 8px 10px rgba(0,0,0,0.6); border: 1px solid #111; }
+    .lh-tower { width: 100%; max-width: 340px; background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 25%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.85) 100%), repeating-linear-gradient(0deg, #eceff1 0%, #eceff1 45px, #c62828 45px, #c62828 90px); border: 2px solid #111; border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 25px 50px rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; padding: 25px 20px; z-index: 2; }
+    .lh-rabbit-message { display: flex; align-items: center; gap: 15px; width: 100%; margin-bottom: 20px; background: rgba(5,5,17,0.7); border: 2px solid #ffaa00; border-radius: 12px; padding: 12px; box-shadow: inset 0 0 10px rgba(255, 170, 0, 0.2), 0 5px 15px rgba(0,0,0,0.6); }
+    .lh-rabbit-message .lh-speech { color: #fdfbf7; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; line-height: 1.4; text-shadow: 0 2px 4px rgba(0,0,0,1); }
+    .lh-chat-window { width: 100%; height: 260px; background: #050511; border: 4px solid #111; border-radius: 8px; overflow: hidden; margin-bottom: 25px; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,1), 0 5px 15px rgba(0,0,0,0.5); }
+    .lh-chat-window img { width: 100%; height: auto; display: block; animation: chatAutoScroll 25s linear infinite alternate; transform-origin: top center; }
+    @keyframes chatAutoScroll { 0%, 100% { transform: translateY(0); } 90%, 100% { transform: translateY(calc(-100% + 260px)); } }
+    .btn-lh-close { background: linear-gradient(to bottom, #d32f2f, #b71c1c); box-shadow: 0 6px 15px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.4); }
+
+    /* =========================================
+       ISLAND 2: ANCIENT CAVE
+       ========================================= */
+    #cave-modal { max-width: 440px; }
+    .cave-environment { width: 100%; height: 600px; background: radial-gradient(ellipse at 50% 90%, #4e342e 0%, #211512 40%, #0b0706 100%); position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0,0,0,1); clip-path: polygon( 5% 0%, 95% 2%, 100% 15%, 98% 30%, 100% 50%, 96% 75%, 98% 95%, 85% 100%, 15% 98%, 2% 90%, 0% 65%, 4% 45%, 0% 25% ); }
+    .cave-shadow-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 80px 40px #0b0706; pointer-events: none; z-index: 5; }
+    .rock-formation { position: absolute; background: linear-gradient(to bottom, #0b0706 20%, #3e2723 100%); z-index: 4; }
+    .stalactite-1 { top: -5px; left: 10%; width: 60px; height: 120px; clip-path: polygon(0 0, 100% 0, 40% 100%); } .stalactite-2 { top: -5px; left: 45%; width: 90px; height: 150px; clip-path: polygon(0 0, 100% 0, 60% 100%); } .stalactite-3 { top: -5px; right: 15%; width: 50px; height: 100px; clip-path: polygon(0 0, 100% 0, 30% 100%); }
+    .stalagmite-1 { bottom: -5px; left: 20%; width: 80px; height: 100px; clip-path: polygon(50% 0, 100% 100%, 0 100%); background: linear-gradient(to top, #0b0706 20%, #4e342e 100%); } .stalagmite-2 { bottom: -5px; right: 25%; width: 60px; height: 80px; clip-path: polygon(40% 0, 100% 100%, 0 100%); background: linear-gradient(to top, #0b0706 20%, #4e342e 100%); }
+    .cave-abyss-glow { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); width: 250px; height: 120px; background: #d97706; filter: blur(60px); opacity: 0.6; z-index: 1; }
+    .ember { position: absolute; background: #fbbf24; border-radius: 50%; opacity: 0; animation: floatEmber linear infinite; z-index: 2; }
+    .e1 { bottom: 10%; left: 30%; width: 4px; height: 4px; animation-duration: 6s; } .e2 { bottom: 5%; left: 70%; width: 6px; height: 6px; animation-duration: 8s; } .e3 { bottom: 15%; left: 50%; width: 3px; height: 3px; animation-duration: 5s; }
+    @keyframes floatEmber { 0% { transform: translateY(0) scale(1); opacity: 0; } 20% { opacity: 0.8; } 80% { opacity: 0.5; } 100% { transform: translateY(-300px) scale(0.5); opacity: 0; } }
+    .cave-inscriptions-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 60px 30px 40px 30px; overflow-y: auto; z-index: 10; scrollbar-width: none; }
+    .cave-inscriptions-area::-webkit-scrollbar { display: none; }
+    .rabbit-cave-intro { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; border-bottom: 1px solid rgba(217, 119, 6, 0.3); padding-bottom: 15px; }
+    .rabbit-cave-intro .cave-speech { color: #fde68a; font-family: 'Courier Prime', monospace; font-size: 0.9rem; font-weight: 700; line-height: 1.4; text-shadow: 0 0 8px rgba(217, 119, 6, 0.8); }
+    .rune-category { color: #fbbf24; font-family: 'Courier Prime', monospace; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; margin-top: 25px; text-transform: uppercase; text-align: center; }
+    .rune-list { list-style: none; padding-left: 0; margin: 0 0 25px 0; }
+    .rune-list li { position: relative; padding-left: 25px; margin-bottom: 18px; color: #fef3c7; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; }
+    .rune-list li::before { content: '✧'; position: absolute; left: 0; top: 2px; color: #fbbf24; font-size: 1.1rem; }
+    .cave-secret-note { margin-top: 40px; padding: 15px; text-align: center; border: 1px solid rgba(217, 119, 6, 0.3); border-radius: 8px; color: #fcd34d; font-family: 'Courier Prime', monospace; font-size: 0.85rem; font-style: italic; line-height: 1.6; background: rgba(11, 7, 6, 0.7); box-shadow: inset 0 0 15px rgba(0,0,0,0.9); }
+    .btn-cave-close { background: linear-gradient(to bottom, #78350f, #451a03); border: 2px solid #271c19; }
+
+    /* =========================================
+       ISLAND 3: VIBRANT WATERFALL
+       ========================================= */
+    #waterfall-modal { max-width: 440px; }
+    .water-environment { width: 100%; height: 600px; background: linear-gradient(180deg, #0077b6 0%, #0096c7 40%, #023e8a 100%); position: relative; overflow: hidden; border-radius: 25px; border: 2px solid #48cae4; }
+    .water-caustics { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 20%), radial-gradient(circle at 70% 60%, rgba(255,255,255,0.08) 0%, transparent 25%); mix-blend-mode: overlay; animation: shiftCaustics 8s infinite alternate ease-in-out; pointer-events: none; z-index: 4; }
+    @keyframes shiftCaustics { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.1) translate(-20px, 15px); } }
+    .sun-ray { position: absolute; top: -50px; width: 120px; height: 150%; background: linear-gradient(180deg, rgba(202,240,248,0.3) 0%, transparent 80%); transform-origin: top center; pointer-events: none; z-index: 5; }
+    .ray1 { left: 5%; animation: sway1 8s infinite alternate ease-in-out; } .ray2 { left: 45%; animation: sway2 10s infinite alternate ease-in-out reverse; width: 160px; }
+    @keyframes sway1 { 0% { transform: rotate(-12deg); opacity: 0.3; } 100% { transform: rotate(-18deg); opacity: 0.6; } } @keyframes sway2 { 0% { transform: rotate(2deg); opacity: 0.5; } 100% { transform: rotate(8deg); opacity: 0.2; } }
+    .bubble { position: absolute; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; animation: rise linear infinite; z-index: 6; }
+    .bbl1 { width: 15px; height: 15px; left: 20%; bottom: -20px; animation-duration: 4s; } .bbl2 { width: 25px; height: 25px; left: 50%; bottom: -30px; animation-duration: 6s; animation-delay: 1s; }
+    @keyframes rise { 0% { transform: translateY(0) translateX(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-650px) translateX(25px); opacity: 0; } }
+    .sea-creature { position: absolute; font-size: 2rem; z-index: 5; pointer-events: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+    .emoji-fish-1 { top: 15%; animation: swimEmojiR 15s linear infinite; } .emoji-turtle { top: 65%; animation: swimEmojiR 25s linear infinite; font-size: 2.5rem; }
+    @keyframes swimEmojiR { 0% { left: -20%; transform: translateY(0) scaleX(1); } 25% { transform: translateY(-15px); } 50% { transform: translateY(0); } 75% { transform: translateY(15px); } 100% { left: 120%; transform: translateY(0); } }
+    .underwater-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 30px 20px 40px 20px; overflow-y: auto; z-index: 10; scrollbar-width: none; display: flex; flex-direction: column; gap: 25px; }
+    .underwater-content::-webkit-scrollbar { display: none; }
+    .floating-p { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px 25px; color: #fff; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 800; box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 0 15px rgba(255,255,255,0.2); position: relative; z-index: 10; }
+    .color-1 { background: linear-gradient(135deg, rgba(255, 111, 145, 0.35), rgba(255, 150, 113, 0.15)); border: 1px solid rgba(255, 111, 145, 0.6); border-radius: 40px 40px 40px 10px; animation: bobTiltOdd 5s infinite alternate ease-in-out; }
+    .color-2 { background: linear-gradient(135deg, rgba(132, 94, 194, 0.35), rgba(214, 93, 177, 0.15)); border: 1px solid rgba(214, 93, 177, 0.6); border-radius: 40px 40px 10px 40px; animation: bobTiltEven 6s infinite alternate ease-in-out; }
+    .delay-1 { animation-delay: 0s; } .delay-2 { animation-delay: -1.5s; }
+    @keyframes bobTiltOdd { 0% { transform: translateY(-6px) rotate(-2deg); } 100% { transform: translateY(6px) rotate(-4deg); } }
+    @keyframes bobTiltEven { 0% { transform: translateY(-4px) rotate(3deg); } 100% { transform: translateY(8px) rotate(1deg); } }
+    .btn-water-close { background: linear-gradient(to bottom, #0077b6, #023e8a); border: 2px solid #90e0ef; }
+
+    /* =========================================
+       ISLAND 4: THE GLOWING TREE (THE CONFESSION)
+       ========================================= */
+    #tree-modal { max-width: 440px; }
+    .tree-environment { 
+      width: 100%; height: 600px; background: radial-gradient(circle at center, #1b2621 0%, #050a06 100%); 
+      position: relative; overflow: hidden; border-radius: 25px; 
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9), inset 0 0 50px rgba(0,0,0,1); border: 2px solid #142b1a;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    
+    .magical-tree-svg { position: absolute; bottom: 0; width: 140%; opacity: 0.1; transition: all 3s ease; z-index: 1; pointer-events: none; }
+    .magical-tree-svg path { fill: none; stroke: #fbbf24; stroke-width: 2; stroke-linecap: round; }
+    
+    .tree-glow-aura { position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, rgba(217, 119, 6, 0.1) 40%, transparent 70%); filter: blur(40px); opacity: 0; z-index: 2; pointer-events: none; }
+    
+    .truth-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 40px 25px; display: flex; flex-direction: column; gap: 20px; z-index: 20; overflow-y: auto; scrollbar-width: none; }
+    .truth-container::-webkit-scrollbar { display: none; }
+    
+    .reveal-line { color: #fef3c7; font-family: 'Playfair Display', serif; font-size: 1.25rem; line-height: 1.4; text-align: center; text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(251, 191, 36, 0.3); opacity: 0; transform: translateY(15px); margin: 0; }
+    .reveal-line.highlight { color: #fbbf24; font-weight: 600; text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 0 25px rgba(251, 191, 36, 0.6); }
+
+    /* CSS ANIMATIONS TIED TO .show CLASS */
+    #tree-modal.show .magical-tree-svg { opacity: 0.6; filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5)); transition-delay: 1.0s; }
+    #tree-modal.show .tree-glow-aura { animation: bloomGlow 4s forwards 1.0s; }
+    
+    #tree-modal.show .reveal-line.t-1 { animation: fadeUpLine 2.5s forwards 1.5s; }
+    #tree-modal.show .reveal-line.t-2 { animation: fadeUpLine 2.5s forwards 4.5s; }
+    #tree-modal.show .reveal-line.t-3 { animation: fadeUpLine 2.5s forwards 8.0s; }
+    #tree-modal.show .reveal-line.t-4 { animation: fadeUpLine 2.5s forwards 11.0s; }
+    #tree-modal.show .reveal-line.t-5 { animation: fadeUpLine 2.5s forwards 14.5s; }
+    #tree-modal.show .reveal-line.t-6 { animation: fadeUpLine 2.5s forwards 17.5s; }
+    #tree-modal.show .reveal-line.t-7 { animation: fadeUpLine 2.5s forwards 20.5s; }
+    #tree-modal.show .reveal-line.t-8 { animation: fadeUpLine 2.5s forwards 23.5s; }
+    #tree-modal.show .reveal-line.t-9 { animation: fadeUpLine 2.5s forwards 26.0s; }
+    #tree-modal.show .reveal-line.t-10 { animation: fadeUpLine 2.5s forwards 29.5s; }
+
+    @keyframes bloomGlow { 0% { opacity: 0; } 100% { opacity: 1; } }
+    @keyframes fadeUpLine { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    .btn-tree-close { background: linear-gradient(to bottom, #d97706, #78350f); border: 2px solid #fcd34d; opacity: 0; pointer-events: none; }
+    #tree-modal.show .btn-tree-close { animation: showBtn 2s forwards 31.5s; }
+    @keyframes showBtn { to { opacity: 1; pointer-events: auto; } }
+
+    /* =========================================
+       ISLAND 5: VIBRANT BEACH (THANK YOU)
+       ========================================= */
+    #beach-modal { max-width: 440px; }
+    .beach-environment {
+      width: 100%; height: 600px; background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 40%, #e0c3fc 60%, #f6d365 100%);
+      position: relative; overflow: hidden; border-radius: 25px;
+      border: 2px solid #fff; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .beach-sun { position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: #fff; border-radius: 50%; box-shadow: 0 0 50px 20px #ffdf00; }
+    .beach-wave { position: absolute; bottom: 0; left: 0; width: 200%; height: 120px; background: rgba(255,255,255,0.2); border-radius: 50% 50% 0 0; animation: waveBob 4s infinite alternate ease-in-out; pointer-events: none; }
+    .beach-wave2 { bottom: -20px; left: -50%; width: 250%; height: 140px; background: rgba(255,255,255,0.3); animation: waveBob 5s infinite alternate-reverse ease-in-out; pointer-events: none; }
+    @keyframes waveBob { 0% { transform: translateX(0) translateY(0); } 100% { transform: translateX(-5%) translateY(10px); } }
+    .beach-sand { position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to bottom, #f6d365, #fda085); clip-path: ellipse(150% 100% at 50% 100%); z-index: 5; pointer-events: none; }
+
+    .beach-instruction { position: absolute; top: 25%; left: 50%; transform: translateX(-50%); color: #fff; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.1rem; text-shadow: 0 2px 8px rgba(0,0,0,0.4); z-index: 10; animation: pulseInst 2s infinite alternate; transition: opacity 0.4s ease; width: 100%; text-align: center; pointer-events: none; }
+    @keyframes pulseInst { 0% { opacity: 0.7; transform: translate(-50%, -5px); } 100% { opacity: 1; transform: translate(-50%, 5px); } }
+
+    .beach-gift { position: absolute; width: 45px; height: 45px; font-size: 2.2rem; cursor: pointer; z-index: 10; transition: transform 0.3s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+    .beach-gift:hover { transform: scale(1.15) rotate(-10deg); filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); }
+    .gift-1 { bottom: 65px; left: 18%; animation: floatItem 3s infinite alternate; }
+    .gift-2 { bottom: 35px; left: 50%; transform: translateX(-50%); animation: floatItem 4s infinite alternate-reverse; }
+    .gift-2:hover { transform: translateX(-50%) scale(1.15) rotate(10deg); }
+    .gift-3 { bottom: 75px; right: 18%; animation: floatItem 3.5s infinite alternate; }
+    @keyframes floatItem { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+
+    .beach-message-card { position: absolute; top: 120px; left: 50%; transform: translateX(-50%) scale(0.9); width: 85%; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; color: #333; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 700; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 20; border: 2px solid #4facfe; }
+    .beach-message-card.active { opacity: 1; transform: translateX(-50%) scale(1); pointer-events: auto; }
+    .beach-message-card p { color: #333; text-shadow: none; margin-bottom: 15px; }
+    .btn-beach-card-close { background: #4facfe; color: #fff; border: none; padding: 8px 15px; border-radius: 20px; margin-top: 15px; cursor: pointer; font-weight: bold; }
+
+    .beach-rainbow { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 320px; height: 160px; border-radius: 160px 160px 0 0; border: 15px solid transparent; box-shadow: inset 0 0 0 8px rgba(255,0,0,0.5), inset 0 0 0 16px rgba(255,165,0,0.5), inset 0 0 0 24px rgba(255,255,0,0.5), inset 0 0 0 32px rgba(0,128,0,0.5), inset 0 0 0 40px rgba(0,0,255,0.5), inset 0 0 0 48px rgba(75,0,130,0.5); opacity: 0; transition: opacity 2.5s ease; z-index: 2; mix-blend-mode: overlay; pointer-events: none; }
+    
+    .beach-final-abstract { 
+      position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); 
+      width: 88%; text-align: center; 
+      color: #0f172a; 
+      background: rgba(255, 255, 255, 0.75); 
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      padding: 25px 20px; border-radius: 18px;
+      font-family: 'Playfair Display', serif; font-size: 1.1rem; line-height: 1.5; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+      opacity: 0; transition: opacity 2.5s ease 0.5s; z-index: 15; font-weight: 700; pointer-events: none;
+    }
+    .beach-final-abstract.active { opacity: 1; }
+
+    .btn-beach-close { background: linear-gradient(to bottom, #4facfe, #00f2fe); border: 2px solid #fff; }
+
+    /* =========================================
+       ISLAND 6: THE FINALE (PARTING CLOUDS)
+       ========================================= */
+    #finale-modal { max-width: 460px; }
+    .finale-environment {
+      width: 100%; height: 600px; background: linear-gradient(to top, #ffb347 0%, #ff7b54 40%, #2b1055 100%);
+      position: relative; overflow: hidden; border-radius: 25px;
+      border: 2px solid #ffdf00; box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(255,179,71,0.4);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .finale-sun { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 250px; height: 250px; background: radial-gradient(circle, #fff 0%, #ffeaa7 30%, transparent 70%); border-radius: 50%; filter: blur(10px); opacity: 0.8; animation: sunPulse 4s infinite alternate ease-in-out; }
+    @keyframes sunPulse { 0% { transform: translateX(-50%) scale(1); opacity: 0.7; } 100% { transform: translateX(-50%) scale(1.1); opacity: 1; } }
+
+    .finale-cloud-layer { position: absolute; top: 0; width: 60%; height: 100%; background-size: cover; background-repeat: no-repeat; z-index: 10; transition: transform 3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .fc-left { left: 0; background: linear-gradient(to right, rgba(255,255,255,1) 30%, rgba(255,255,255,0.8) 70%, transparent 100%); transform-origin: left; }
+    .fc-right { right: 0; background: linear-gradient(to left, rgba(255,255,255,1) 30%, rgba(255,255,255,0.8) 70%, transparent 100%); transform-origin: right; }
+    
+    .fc-left::after, .fc-right::after { content: ''; position: absolute; width: 150%; height: 100%; background: #fff; filter: blur(30px); opacity: 0.9; pointer-events: none; }
+    
+    .part-clouds-instruction { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; z-index: 12; color: #fff; font-family: 'Nunito', sans-serif; font-size: 1.3rem; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.8); animation: cloudFloatText 2s infinite alternate; pointer-events: none; transition: opacity 0.5s ease; }
+      
+    @keyframes cloudFloatText { 0% { transform: translate(-50%, -50%) scale(0.95); } 100% { transform: translate(-50%, -50%) scale(1.05); } }
+
+    .finale-environment.parted .fc-left { transform: translateX(-120%); }
+    .finale-environment.parted .fc-right { transform: translateX(120%); }
+    .finale-environment.parted .part-clouds-instruction { opacity: 0; visibility: hidden; animation: none; }
+
+    .finale-text-container { position: absolute; z-index: 5; width: 85%; text-align: center; display: flex; flex-direction: column; gap: 20px; }
+    .f-line { color: #fff; font-family: 'Playfair Display', serif; font-size: 1.15rem; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.8); opacity: 0; transform: translateY(20px); transition: all 2s ease; margin: 0; }
+    .f-line.highlight { color: #ffdf00; font-weight: 600; font-size: 1.25rem; text-shadow: 0 2px 10px rgba(0,0,0,0.9), 0 0 20px rgba(255, 223, 0, 0.4); }
+
+    .finale-environment.parted .f-line.show-1 { opacity: 1; transform: translateY(0); transition-delay: 1.5s; }
+    .finale-environment.parted .f-line.show-2 { opacity: 1; transform: translateY(0); transition-delay: 4.5s; }
+    .finale-environment.parted .f-line.show-3 { opacity: 1; transform: translateY(0); transition-delay: 8.0s; }
+    .finale-environment.parted .f-line.show-4 { opacity: 1; transform: translateY(0); transition-delay: 11.5s; }
+
+    .btn-finale-close { background: linear-gradient(to bottom, #ff7b54, #d84b2a); border: 2px solid #ffdf00; opacity: 0; pointer-events: none; transition: opacity 2s ease 14s; }
+    .finale-environment.parted ~ .btn-finale-close { opacity: 1; pointer-events: auto; }
+
+  </style>
+</head>
+<body>
+
+  <!-- AURORA BACKGROUND & LOCK SCREEN -->
+  <div class="aurora-container" id="aurora-bg">
+    <div class="aurora-blob blob-1"></div><div class="aurora-blob blob-2"></div><div class="aurora-blob blob-3"></div>
+  </div>
+  <div class="floaty f1" id="floaty-1">🥕</div><div class="floaty f2" id="floaty-2">🐾</div><div class="floaty f3" id="floaty-3">🥕</div>
+
+  <div class="card-container" id="lock-screen-container">
+    <div class="peeking-bunny">
+      <div class="ears"><div class="ear left"></div><div class="ear right"></div></div>
+      <div class="head">
+        <div class="whiskers-left"><div class="whisker w1"></div><div class="whisker w2"></div><div class="whisker w3"></div></div>
+        <div class="whiskers-right"><div class="whisker w1"></div><div class="whisker w2"></div><div class="whisker w3"></div></div>
+        <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+        <div class="cheeks"><div class="cheek"></div><div class="cheek"></div></div>
+        <div class="nose"></div>
+      </div>
+    </div>
+    <div class="glass-card" id="lock-screen">
+      <div class="bunny-paws"><div class="paw-grip"></div><div class="paw-grip"></div></div>
+      <h2>Kahan reh gaye... 🐢</h2>
+      <p>Tumhara rabbit kab se wait kar raha hai. Sahi codename daalo aur andar aao!</p>
+      <div class="input-wrapper"><input type="text" id="password-input" placeholder="Codename yahan likho..." autocomplete="off"></div>
+      <button class="unlock-btn" onclick="checkPassword()">Unlock Karo</button>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <div id="typing-container">
+    <div class="chat-header" id="chat-time">Today, 12:12 PM</div>
+    <div class="typing-layout" id="typing-bubble">
+      <div class="profile-pic-container"><div class="profile-pic">🐢</div><div class="online-dot"></div></div>
+      <div class="chat-bubble"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
+    </div>
+    <div id="dynamic-text"></div>
+  </div>
+
+  <!-- CINEMATIC MAP SYSTEM -->
+  <div id="map-viewport">
+    <div class="ambient-dust-layer"></div>
+    <div id="map-canvas">
+      <div class="sun-flare"></div>
+      <div class="dynamic-cloud dc-1"></div><div class="dynamic-cloud dc-2"></div><div class="dynamic-cloud dc-3"></div>
+      <div class="bird-flock">
+        <svg class="bird b1" viewBox="0 0 40 20"><path d="M 0 10 Q 10 0 20 10 Q 30 0 40 10" /></svg>
+        <svg class="bird b2" viewBox="0 0 40 20"><path d="M 0 10 Q 10 0 20 10 Q 30 0 40 10" /></svg>
+        <svg class="bird b3" viewBox="0 0 40 20"><path d="M 0 10 Q 10 0 20 10 Q 30 0 40 10" /></svg>
+        <svg class="bird b4" viewBox="0 0 40 20"><path d="M 0 10 Q 10 0 20 10 Q 30 0 40 10" /></svg>
+      </div>
+    </div>
+    
+    <div id="ui-layer">
+      <div id="dialogue-container">
+        
+        <div id="state-start" class="dialogue-state">
+          <div id="rabbit-start-comp" class="companion-wrapper"><div class="speech-bubble">Ready, Vandana?</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-start-comp" class="companion-wrapper"><div class="speech-bubble">Yes! Let's go!</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+        <div id="state-island-1" class="dialogue-state">
+          <div id="rabbit-island-1-comp" class="companion-wrapper"><div class="speech-bubble">Tap the crystal!</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-1-comp" class="companion-wrapper"><div class="speech-bubble">What's inside?</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+        <div id="state-island-2" class="dialogue-state">
+          <div id="rabbit-island-2-comp" class="companion-wrapper"><div class="speech-bubble">An ancient cave! Dare to enter?</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-2-comp" class="companion-wrapper"><div class="speech-bubble">Are there secrets inside? 👀</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+        <div id="state-island-3" class="dialogue-state">
+          <div id="rabbit-island-3-comp" class="companion-wrapper"><div class="speech-bubble">Alright, fine. Time for actual compliments...</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-3-comp" class="companion-wrapper"><div class="speech-bubble">Wait, really? 🥺</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+        <div id="state-island-4" class="dialogue-state">
+          <div id="rabbit-island-4-comp" class="companion-wrapper"><div class="speech-bubble">We've reached the Glowing Tree. There is something buried here...</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-4-comp" class="companion-wrapper"><div class="speech-bubble">What did you bury?</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+        <div id="state-island-5" class="dialogue-state">
+          <div id="rabbit-island-5-comp" class="companion-wrapper"><div class="speech-bubble">A sunny beach! I found some gifts washed up in the sand...</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-5-comp" class="companion-wrapper"><div class="speech-bubble">Wait, are those... my files?</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+        <div id="state-island-6" class="dialogue-state">
+          <div id="rabbit-island-6-comp" class="companion-wrapper"><div class="speech-bubble">The final stop. It’s so bright...</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-6-comp" class="companion-wrapper"><div class="speech-bubble">What's waiting for us here?</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+        
+        <div id="state-island-7" class="dialogue-state">
+          <div id="rabbit-island-7-comp" class="companion-wrapper"><div class="speech-bubble">Okay, my turn. You know what makes me blush...</div><img src="rabbit-avatar.jpg" class="character-portrait"></div>
+          <div id="tortoise-island-7-comp" class="companion-wrapper"><div class="speech-bubble">Oh god, what are you going to ask?</div><img src="tortoise-avatar.jpg" class="character-portrait tort-port"></div>
+        </div>
+
+      </div>
+      
+      <div id="nav-buttons-container" class="nav-buttons-container">
+        <button id="nav-btn-back" class="nav-btn nav-btn-back" onclick="handleNavBack()">Back</button>
+        <button id="nav-btn" class="nav-btn" onclick="handleNavClick()">Ready</button>
+      </div>
+      
+    </div>
+    
+    <div id="blush-prompt-container" class="glass-card blush-card">
+      <h2>My Turn...</h2>
+      <p>What makes you blush? Be honest! ✨</p>
+      <div class="input-wrapper">
+        <input type="text" id="blush-input" placeholder="Type your secret here..." autocomplete="off">
+      </div>
+      <button id="blush-submit" class="unlock-btn" onclick="submitBlush()">Send to Rabbit</button>
+      <div id="blush-error"></div>
+    </div>
+
+    <div id="free-roam-toast" class="free-roam-toast">Map Unlocked — Explore anywhere!</div>
+    
+  </div>
+
+  <div id="modal-overlay" onclick="closeAllModals()"></div>
+  
+  <div id="lighthouse-modal" class="modal-content-box">
+    <div class="lh-beam"></div>
+    <div class="lh-roof-cap"></div>
+    <div class="lh-roof"></div>
+    <div class="lh-lantern"><div class="lh-light-core"></div></div>
+    <div class="lh-gallery"></div>
+    <div class="lh-tower">
+      <div class="lh-rabbit-message">
+        <img src="rabbit-avatar.jpg" alt="Rabbit" class="character-portrait" style="width:50px; height:50px;">
+        <div class="lh-speech">
+          Our stubbornness to chatting all night even though we don't have any topic just because I like your digital presence 😭
+        </div>
+      </div>
+      <div class="lh-chat-window">
+        <img src="1000383182.jpg" alt="Our Forceful Chats">
+      </div>
+      <button class="btn-close-modal btn-lh-close" onclick="closeAllModals()">Close Archive</button>
+    </div>
+  </div>
+
+  <div id="cave-modal" class="modal-content-box">
+    <div class="cave-environment">
+      <div class="cave-shadow-overlay"></div>
+      <div class="rock-formation stalactite-1"></div>
+      <div class="rock-formation stalactite-2"></div>
+      <div class="rock-formation stalactite-3"></div>
+      <div class="rock-formation stalagmite-1"></div>
+      <div class="rock-formation stalagmite-2"></div>
+      <div class="cave-abyss-glow"></div>
+      <div class="ember e1"></div><div class="ember e2"></div><div class="ember e3"></div>
+      <div class="cave-inscriptions-area">
+        <div class="rabbit-cave-intro">
+          <img src="rabbit-avatar.jpg" alt="Rabbit" class="character-portrait" style="width:45px; height:45px; border-color:#d97706; flex-shrink: 0;">
+          <div class="cave-speech">Everything I know about you is etched into these ancient walls. Prepare to be exposed... ✨</div>
+        </div>
+        <h3 class="rune-category">🔍 The "Exposed" Files</h3>
+        <ul class="rune-list">
+          <li>You type so incredibly slow, it’s like watching a turtle run through wet cement.</li>
+          <li>You will be fighting for your life at 2 AM, eyes half-closed, and still boldly lie saying, "No, I'm totally not sleepy." 🙄</li>
+          <li>You actively choose violence by leaving my messages hanging, just for the aesthetic.</li>
+          <li>Your texts are like FBI classified documents—always so vague and hiding the actual substance.</li>
+          <li>Your own brother calls you "Parle G".</li>
+          <li>You're currently navigating life in Delhi.</li>
+        </ul>
+        <h3 class="rune-category" style="color: #fda4af; text-shadow: 0 0 10px #f43f5e, 0 0 20px #9f1239;">🌸 The Softer Truths</h3>
+        <ul class="rune-list">
+          <li>You officially spawned into this world on March 4th.</li>
+          <li>You are obsessed with the song <em>Banjara</em> (if I'm wrong about this, please don't kill me).</li>
+          <li>You and your mom form a highly dangerous, elite gossip duo.</li>
+          <li>You have serious mood swings, and that one boy in coaching who roasted your height was clearly playing with fire...</li>
+          <li>...but underneath it all, you're a massive empath (who still cares deeply about a friend lost to a silly misunderstanding) and actually ridiculously sweet.</li>
+        </ul>
+        <div class="cave-secret-note">
+          <strong>P.S.</strong> I also remember a few ultra-personal things we’ve talked about, but I’m intentionally keeping those off the internet. Some things stay just between us. 🤫
+        </div>
+      </div>
+    </div>
+    <button class="btn-close-modal btn-cave-close" onclick="closeAllModals()">Step Out of the Cave</button>
+  </div>
+
+  <div id="waterfall-modal" class="modal-content-box">
+    <div class="water-environment">
+      <div class="water-caustics"></div>
+      <div class="sun-ray ray1"></div><div class="sun-ray ray2"></div>
+      <div class="bubble bbl1"></div><div class="bubble bbl2"></div>
+      <div class="sea-creature emoji-fish-1">🐠</div><div class="sea-creature emoji-turtle">🐢</div>
+      <div class="underwater-content">
+        <div class="floating-p color-1 delay-1">The way you fight sleep at 2 AM just to keep our random chats going—even while boldly lying that you aren't tired. It's actually really sweet.</div>
+        <div class="floating-p color-2 delay-2">You are a true empath. Seeing how deeply you still care and feel regret over losing a friend to a simple misunderstanding shows exactly what a good heart you have.</div>
+        <div class="floating-p color-1 delay-1">I really appreciate that you trust me. Being able to drop the jokes and just talk about the real, heavy stuff with you without any filters means a lot to me.</div>
+        <div class="floating-p color-2 delay-2">Somewhere between you leaving me on read and us constantly annoying each other, you became my favorite person to talk to.</div>
+        <div class="floating-p color-1 delay-1">Despite you being a moody, slow-typing turtle... seeing your name pop up on my screen is easily one of my favorite parts of the day.</div>
+        <div class="floating-p color-2 delay-2">Even though we are just talking through screens, I just really love your digital presence. 🐢❤️</div>
+      </div>
+    </div>
+    <button class="btn-close-modal btn-water-close" onclick="closeAllModals()">Swim to Surface</button>
+  </div>
+
+  <div id="tree-modal" class="modal-content-box">
+    <div class="tree-environment">
+
+      <svg class="magical-tree-svg" viewBox="0 0 200 300">
+        <path d="M 100 300 C 90 200, 110 150, 100 100" />
+        <path d="M 100 150 C 70 120, 50 100, 40 80" />
+        <path d="M 100 140 C 130 110, 150 90, 160 70" />
+        <path d="M 100 180 C 80 150, 60 130, 70 100" />
+        <path d="M 100 170 C 120 140, 140 120, 130 90" />
+        <path d="M 80 120 C 60 90, 70 60, 50 40" />
+        <path d="M 120 110 C 140 80, 130 50, 150 30" />
+        <path d="M 100 300 C 80 310, 60 320, 40 330" />
+        <path d="M 100 300 C 120 310, 140 320, 160 330" />
+      </svg>
+      <div class="tree-glow-aura"></div>
+
+      <div class="truth-container">
+        <p class="reveal-line t-1">You might have completely forgotten about this.</p>
+        <p class="reveal-line t-2">Two years ago, you had been a bit rude to me, and honestly... it really annoyed me.</p>
+        <p class="reveal-line t-3">I didn't actually lose my phone back then.</p>
+        <p class="reveal-line t-4">I just ignored your messages for 15 straight days out of pure frustration.</p>
+        <p class="reveal-line t-5">It was a petty, childish lie to hide behind instead of talking it out.</p>
+        <p class="reveal-line t-6">But when we finally spoke... and you swallowed your pride to apologize...</p>
+        <p class="reveal-line t-7 highlight">...and told me that just me reaching out made your day "Good"...</p>
+        <p class="reveal-line t-8">...it completely melted all my annoyance away.</p>
+        <p class="reveal-line t-9">That is why I promised you that day I would never ignore your messages again.</p>
+        <p class="reveal-line t-10 highlight">And it is a promise I intend to keep forever.</p>
+      </div>
+
+    </div>
+    <button class="btn-close-modal btn-tree-close" onclick="closeAllModals()">I understand</button>
+  </div>
+
+  <div id="beach-modal" class="modal-content-box">
+    <div class="beach-environment">
+      <div class="beach-sun"></div>
+      <div class="beach-rainbow" id="beach-rainbow"></div>
+      <div class="beach-wave"></div><div class="beach-wave2"></div>
+      <div class="beach-sand"></div>
+      
+      <div class="beach-instruction" id="beach-instruction">Tap the gifts that washed ashore...</div>
+
+      <div class="beach-final-abstract" id="beach-final-msg">
+        Out of all the ways someone could say happy birthday, you built me entirely new worlds.<br><br>
+        But beyond the amazing code and the jokes... even when we are miles apart, your digital presence carries a warmth I can't really explain.<br><br>
+        Thank you for making my days better just by existing in them.
+      </div>
+
+      <div class="beach-gift gift-1" onclick="openBeachGift(1)">🎮</div>
+      <div class="beach-gift gift-2" onclick="openBeachGift(2)">💌</div>
+      <div class="beach-gift gift-3" onclick="openBeachGift(3)">📁</div>
+
+      <div class="beach-message-card" id="bgift-1">
+        <h4>Level 19 Unlocked ✨</h4>
+        <p>You made a whole game just for me. I'll gladly let you keep your "annoying people professionally" privileges. (Though I'm still trying to defeat the final boss). 🐢</p>
+        <button class="btn-beach-card-close" onclick="closeBeachGift(1)">Keep in heart</button>
+      </div>
+      <div class="beach-message-card" id="bgift-2">
+        <h4>For My Favorite Problem ❤️</h4>
+        <p>You admitted I'm your favorite person to bother. And for the record, that "blushing test" you coded was... unfortunately scientifically accurate. 🫣</p>
+        <button class="btn-beach-card-close" onclick="closeBeachGift(2)">Keep in heart</button>
+      </div>
+      <div class="beach-message-card" id="bgift-3">
+        <h4>Case File 19 🕵️</h4>
+        <p>Your highly classified investigation successfully exposed my analytical replies and mystery obsession. A flawless report, Detective.</p>
+        <button class="btn-beach-card-close" onclick="closeBeachGift(3)">Keep in heart</button>
+      </div>
+    </div>
+    <button class="btn-close-modal btn-beach-close" onclick="closeAllModals()">Walk along the shore</button>
+  </div>
+
+  <div id="finale-modal" class="modal-content-box">
+    <div class="finale-environment" id="finale-env" onclick="partClouds()">
+      <div class="finale-sun"></div>
+      
+      <div class="finale-text-container">
+        <p class="f-line show-1">My biggest wish for you is simple:</p>
+        <p class="f-line show-2">I want you to build exactly the life you want, exactly the way you want to live it.</p>
+        <p class="f-line show-3">May you find wild success, and may you always be surrounded by people who love and cherish you.</p>
+        <p class="f-line show-4 highlight">No matter where our separate paths take us in the future, I will always be rooting for you.</p>
+      </div>
+
+      <div class="finale-cloud-layer fc-left"></div>
+      <div class="finale-cloud-layer fc-right"></div>
+      <div class="part-clouds-instruction" id="part-inst">Tap to part the clouds</div>
+    </div>
+    <button class="btn-close-modal btn-finale-close" onclick="closeAllModals()">Look at the Horizon</button>
+  </div>
+
+  <script>
+    const MAP_SIZE = 4000;
+    let currentStop = 0;
+    let isTransitioning = false; 
+    
+    const stops = [
+      { x: 50, y: 88, scale: 0.4, btn: "Ready" },        
+      { x: 18, y: 52, scale: 0.4, btn: "Next" },             
+      { x: 32, y: 48, scale: 0.4, btn: "Next" },             
+      { x: 50, y: 48, scale: 0.4, btn: "Next" },             
+      { x: 72, y: 45, scale: 0.4, btn: "Next" }, 
+      { x: 88, y: 50, scale: 0.4, btn: "Next" },             
+      { x: 50, y: 22, scale: 0.4, btn: "Reveal Map" },       
+      { x: 50, y: 50, scale: 'reveal', btn: "" }             
+    ];
+
+    const canvas = document.getElementById('map-canvas');
+    for (let i = 1; i <= 6; i++) {
+      const marker = document.createElement('div');
+      marker.className = 'waypoint-marker';
+      marker.id = `wp-${i}`;
+      marker.style.left = stops[i].x + '%';
+      marker.style.top = stops[i].y + '%';
+      marker.onclick = () => openIslandModal(i);
+      marker.innerHTML = `<div class="rhombus-crystal"></div><div class="ground-glow"></div>`;
+      canvas.appendChild(marker);
+    }
+
+    function handleNavClick() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      if (currentStop === 0) {
+        const btn = document.getElementById('nav-btn');
+        const tortStart = document.getElementById('tortoise-start-comp');
+        btn.classList.remove('show'); tortStart.classList.add('show'); 
+        setTimeout(() => {
+          tortStart.classList.remove('show');
+          document.getElementById('rabbit-start-comp').classList.remove('show');
+          setTimeout(() => { currentStop++; panCamera(currentStop); }, 400);
+        }, 1500);
+      } else {
+        if (currentStop < stops.length - 1) { 
+          currentStop++; 
+          panCamera(currentStop); 
+        } else {
+          isTransitioning = false;
+        }
+      }
+    }
+
+    function handleNavBack() {
+      if (isTransitioning) return;
+      if (currentStop > 1) { 
+        isTransitioning = true;
+        currentStop--;
+        panCamera(currentStop);
+      }
+    }
+
+    function openIslandModal(index) {
+      if (isTransitioning) return;
+      if (index >= 1 && index <= 6) {
+        isTransitioning = true;
+        document.getElementById('ui-layer').style.opacity = '0';
+        
+        const stop = stops[index];
+        const vW = window.innerWidth; const vH = window.innerHeight;
+        const deepScale = 0.9; 
+        const px = (stop.x / 100) * MAP_SIZE; const py = (stop.y / 100) * MAP_SIZE;
+        const targetX = (vW / 2) - (px * deepScale); const targetY = (vH / 2) - (py * deepScale);
+
+        canvas.style.transition = "transform 1.5s cubic-bezier(0.25, 1, 0.5, 1)";
+        canvas.style.transform = `translate(${targetX}px, ${targetY}px) scale(${deepScale})`;
+
+        setTimeout(() => {
+          document.getElementById('modal-overlay').style.display = 'block';
+          
+          let targetModal = '';
+          if(index === 1) targetModal = 'lighthouse-modal';
+          if(index === 2) targetModal = 'cave-modal';
+          if(index === 3) targetModal = 'waterfall-modal';
+          if(index === 4) targetModal = 'tree-modal';
+          if(index === 5) targetModal = 'beach-modal';
+          if(index === 6) targetModal = 'finale-modal';
+
+          document.getElementById(targetModal).style.display = 'flex';
+          
+          setTimeout(() => {
+            document.getElementById('modal-overlay').style.opacity = '1';
+            document.getElementById(targetModal).classList.add('show');
+            isTransitioning = false;
+          }, 10);
+        }, 1500);
+      } else {
+        alert("This memory is still sealed!");
+      }
+    }
+
+       function closeAllModals() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      document.getElementById('modal-overlay').style.opacity = '0';
+      const modals = document.querySelectorAll('.modal-content-box');
+      modals.forEach(m => m.classList.remove('show'));
+      
+      setTimeout(() => {
+        document.getElementById('modal-overlay').style.display = 'none';
+        modals.forEach(m => m.style.display = 'none');
+        
+        const stop = stops[currentStop];
+        const vW = window.innerWidth; const vH = window.innerHeight;
+        
+        // FIX: Dynamically determine the scale instead of hardcoding 0.4
+        let activeScale = stop.scale;
+        let isReveal = (activeScale === 'reveal');
+        
+        if (isReveal) { 
+            activeScale = Math.min(vW / MAP_SIZE, vH / MAP_SIZE); 
+        }
+        
+        const px = (stop.x / 100) * MAP_SIZE; const py = (stop.y / 100) * MAP_SIZE;
+        let targetX = (vW / 2) - (px * activeScale); let targetY = (vH / 2) - (py * activeScale);
+        
+        // FIX: Apply correct panning/centering depending on whether it's full map or zoomed in
+        if (!isReveal) {
+            const minX = vW - (MAP_SIZE * activeScale); const minY = vH - (MAP_SIZE * activeScale);
+            if ((MAP_SIZE * activeScale) > vW) {
+              if (targetX > 0) targetX = 0; else if (targetX < minX) targetX = minX; 
+            } else { targetX = (vW - (MAP_SIZE * activeScale)) / 2; }
+            if ((MAP_SIZE * activeScale) > vH) {
+              if (targetY > 0) targetY = 0; else if (targetY < minY) targetY = minY; 
+            } else { targetY = (vH - (MAP_SIZE * activeScale)) / 2; }
+        } else {
+            targetX = (vW - (MAP_SIZE * activeScale)) / 2; targetY = (vH - (MAP_SIZE * activeScale)) / 2;
+        }
+
+        canvas.style.transition = "transform 1.2s cubic-bezier(0.25, 1, 0.5, 1)";
+        canvas.style.transform = `translate(${targetX}px, ${targetY}px) scale(${activeScale})`;
+        
+        document.getElementById('ui-layer').style.opacity = '1';
+        
+        setTimeout(() => { 
+            isTransitioning = false; 
+            
+            if (currentStop === 6) {
+                document.getElementById('nav-btn').classList.add('show');
+            }
+        }, 1200);
+      }, 500);
+    }
+
+
+       function panCamera(index) {
+      const stop = stops[index];
+      const btn = document.getElementById('nav-btn');
+      const btnBack = document.getElementById('nav-btn-back');
+      
+      btn.classList.remove('show');
+      btnBack.classList.remove('show'); // Hides instantly when animation starts
+
+      document.querySelectorAll('.companion-wrapper').forEach(cw => cw.classList.remove('show'));
+      document.querySelectorAll('.dialogue-state').forEach(ds => ds.classList.remove('active'));
+
+      const vW = window.innerWidth; const vH = window.innerHeight;
+      let activeScale = stop.scale;
+      let isReveal = (activeScale === 'reveal');
+      
+      if (isReveal) { activeScale = Math.min(vW / MAP_SIZE, vH / MAP_SIZE); }
+      
+      const px = (stop.x / 100) * MAP_SIZE; const py = (stop.y / 100) * MAP_SIZE;
+      let targetX = (vW / 2) - (px * activeScale); let targetY = (vH / 2) - (py * activeScale);
+
+      if (!isReveal) {
+        const minX = vW - (MAP_SIZE * activeScale); const minY = vH - (MAP_SIZE * activeScale);
+        if ((MAP_SIZE * activeScale) > vW) {
+          if (targetX > 0) targetX = 0; else if (targetX < minX) targetX = minX; 
+        } else { targetX = (vW - (MAP_SIZE * activeScale)) / 2; }
+        if ((MAP_SIZE * activeScale) > vH) {
+          if (targetY > 0) targetY = 0; else if (targetY < minY) targetY = minY; 
+        } else { targetY = (vH - (MAP_SIZE * activeScale)) / 2; }
+      } else {
+        targetX = (vW - (MAP_SIZE * activeScale)) / 2; targetY = (vH - (MAP_SIZE * activeScale)) / 2;
+      }
+      
+      document.querySelectorAll('.waypoint-marker').forEach(m => m.classList.remove('active'));
+
+      if (index === 0) {
+        document.getElementById('state-start').classList.add('active');
+        canvas.style.transition = "none";
+        canvas.style.transform = `translate(${targetX}px, ${targetY}px) scale(${activeScale})`;
+        
+        setTimeout(() => { document.getElementById('rabbit-start-comp').classList.add('show'); }, 1000);
+        setTimeout(() => { 
+           btn.innerText = stop.btn; 
+           btn.classList.add('show'); 
+           isTransitioning = false;
+        }, 1200);
+
+      } else {
+        let minSafeScale = Math.max(vW, vH) / MAP_SIZE;
+        let windupScale = Math.max(0.15, minSafeScale * 1.15); 
+        
+        let windupX = (vW / 2) - (px * windupScale); let windupY = (vH / 2) - (py * windupScale);
+        const minWindupX = vW - (MAP_SIZE * windupScale); const minWindupY = vH - (MAP_SIZE * windupScale);
+        if (windupX > 0) windupX = 0; else if (windupX < minWindupX) windupX = minWindupX;
+        if (windupY > 0) windupY = 0; else if (windupY < minWindupY) windupY = minWindupY;
+
+        canvas.style.transition = "transform 0.6s cubic-bezier(0.5, 0, 1, 0.5), filter 0.6s ease-in";
+        canvas.style.filter = "blur(18px) brightness(1.4)";
+        canvas.style.transform = `translate(${windupX}px, ${windupY}px) scale(${windupScale}) rotateZ(12deg) skewX(5deg)`;
+
+        setTimeout(() => {
+          canvas.style.transition = "transform 1.2s cubic-bezier(0.1, 1, 0.2, 1), filter 1.2s ease-out";
+          canvas.style.filter = "blur(0px) brightness(1)";
+          canvas.style.transform = `translate(${targetX}px, ${targetY}px) scale(${activeScale}) rotateZ(0deg) skewX(0deg)`;
+        }, 600); 
+
+        setTimeout(() => {
+          if (index > 0 && index < 7) { 
+            for(let i=1; i<=index; i++) {
+               let wp = document.getElementById(`wp-${i}`);
+               if (wp) wp.classList.add('active');
+            }
+          } 
+          else if (index === 7) { 
+            document.querySelectorAll('.waypoint-marker').forEach(m => m.classList.add('active')); 
+          }
+          
+          if (index < 6) { 
+            let dialogState = document.getElementById(`state-island-${index}`);
+            if (dialogState) dialogState.classList.add('active');
+            
+            let rabComp = document.getElementById(`rabbit-island-${index}-comp`);
+            let tortComp = document.getElementById(`tortoise-island-${index}-comp`);
+            
+            if (rabComp) rabComp.classList.add('show');
+            if (tortComp) setTimeout(() => { tortComp.classList.add('show'); }, 300);
+            
+            btn.innerText = stop.btn; 
+            btn.classList.add('show'); 
+            if (index > 1) btnBack.classList.add('show'); // Shows back button if past Island 1
+            
+            document.getElementById('nav-buttons-container').style.display = 'flex';
+            document.getElementById('blush-prompt-container').classList.remove('show');
+            
+          } else if (index === 6) { 
+            let dialogState = document.getElementById(`state-island-${index}`);
+            if (dialogState) dialogState.classList.add('active');
+            
+            let rabComp = document.getElementById(`rabbit-island-${index}-comp`);
+            let tortComp = document.getElementById(`tortoise-island-${index}-comp`);
+            
+            if (rabComp) rabComp.classList.add('show');
+            if (tortComp) setTimeout(() => { tortComp.classList.add('show'); }, 300);
+            
+            btn.innerText = stop.btn; 
+            // DO NOT ADD 'show' CLASS TO btn YET. 
+            // It will be added inside closeAllModals()
+            btnBack.classList.add('show'); // Shows back button on Island 6
+            
+            document.getElementById('nav-buttons-container').style.display = 'flex';
+            document.getElementById('blush-prompt-container').classList.remove('show');
+            
+          } else if (index === 7) {
+            document.getElementById('nav-buttons-container').style.display = 'none';
+            document.getElementById('state-island-7').classList.add('active');
+            setTimeout(() => { document.getElementById('rabbit-island-7-comp').classList.add('show'); }, 500);
+            setTimeout(() => { document.getElementById('tortoise-island-7-comp').classList.add('show'); }, 2000);
+            setTimeout(() => { document.getElementById('blush-prompt-container').classList.add('show'); }, 3500);
+          }
+          
+          isTransitioning = false;
+        }, 1800); 
+      }
+    }
+
+
+    let initialWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      // Only recalculate on actual width changes (prevents mobile keyboard issues)
+      if (Math.abs(window.innerWidth - initialWidth) > 10) {
+         initialWidth = window.innerWidth;
+         if (document.getElementById('map-viewport').style.display === "block") {
+            document.getElementById('map-canvas').style.transition = "none";
+            panCamera(currentStop); 
+         }
+      }
+    });
+
+    function setChatTime() {
+      const now = new Date(); let hours = now.getHours(); let minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12; hours = hours ? hours : 12; 
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      document.getElementById('chat-time').innerText = `Today, ${hours}:${minutes} ${ampm}`;
+    }
+
+    function checkPassword() {
+      if (window.isUnlocking) return;
+      window.isUnlocking = true;
+      
+      const input = document.getElementById("password-input");
+      const lockContainer = document.getElementById("lock-screen-container");
+      const message = document.getElementById("message");
+      if (["tortoise", "turtle"].includes(input.value.toLowerCase().trim())) {
+        message.style.color = "#ffaa00"; 
+        message.innerText = "Kya baat hai turtle! Sahi guess kiya. ✨"; 
+        message.style.opacity = "1";
+        input.disabled = true;
+        setTimeout(() => { lockContainer.style.transform = "scale(1.1)"; lockContainer.style.opacity = "0"; }, 600);
+        setTimeout(() => { lockContainer.style.display = "none"; document.getElementById("typing-container").style.display = "block"; setChatTime(); startTypingRoast(); }, 1000);
+      } else {
+        message.style.color = "#ff2a5f"; message.innerText = "Arre nahi! Phir se try karo."; message.style.opacity = "1";
+        lockContainer.classList.remove("error-shake"); void lockContainer.offsetWidth; lockContainer.classList.add("error-shake");
+        setTimeout(() => { window.isUnlocking = false; }, 300);
+      }
+    }
+    document.getElementById("password-input").addEventListener("keypress", (e) => { if (e.key === "Enter") checkPassword(); });
+
+    async function startTypingRoast() {
+      const textContainer = document.getElementById("dynamic-text");
+      const phrases = [ "Tumhara reply type ho raha hai...", "Wait... lagta hai phir se backspace daba diya.", "Itna kya soch rahe ho?", "Mai bhi eise hi wait karta hun jab slow reply karte ho.", "Aaj tum tumhara khud ka roop dekhogi 🐢" ];
+      const typeText = async (text) => { textContainer.innerHTML = ""; for (let i = 0; i < text.length; i++) { textContainer.innerHTML = text.substring(0, i + 1) + "<span class='cursor'></span>"; await new Promise(r => setTimeout(r, 55)); } };
+      const deleteText = async (text) => { for (let i = text.length; i >= 0; i--) { textContainer.innerHTML = text.substring(0, i) + "<span class='cursor'></span>"; await new Promise(r => setTimeout(r, 25)); } };
+      for (let i = 0; i < phrases.length; i++) {
+        await typeText(phrases[i]);
+        if (i < phrases.length - 1) { await new Promise(r => setTimeout(r, 1100)); await deleteText(phrases[i]); await new Promise(r => setTimeout(r, 350)); } 
+        else {
+          setTimeout(() => {
+            textContainer.innerHTML = phrases[i];
+            setTimeout(() => {
+              const typingCont = document.getElementById("typing-container");
+              typingCont.style.opacity = "0"; typingCont.style.transform = "scale(0.95)";
+              document.getElementById("aurora-bg").style.opacity = "0";
+              ["floaty-1", "floaty-2", "floaty-3"].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = "none"; });
+              setTimeout(() => {
+                typingCont.style.display = "none"; document.getElementById("aurora-bg").style.display = "none";
+                const mapViewport = document.getElementById("map-viewport");
+                mapViewport.style.display = "block";
+                panCamera(0); 
+                setTimeout(() => { mapViewport.style.opacity = "1"; }, 50);
+              }, 600);
+            }, 2500);
+          }, 1800);
+        }
+      }
+    }
+    
+       function submitBlush() {
+      const input = document.getElementById('blush-input').value.trim();
+      const errorMsg = document.getElementById('blush-error');
+      
+      // Fix: Changed input.length < 4 to input.length === 0 so short words like "hug" are accepted
+      if (input.length === 0 || input.toLowerCase() === 'nothing') {
+        errorMsg.innerText = "Nice try, Parle G. You can't escape this. Be honest!";
+        errorMsg.style.opacity = '1';
+        const card = document.getElementById('blush-prompt-container');
+        card.classList.remove('card-error-shake'); void card.offsetWidth; card.classList.add('card-error-shake');
+        return;
+      }
+      
+      errorMsg.style.opacity = '0';
+      const card = document.getElementById('blush-prompt-container');
+      document.getElementById('blush-submit').innerText = "Sending...";
+      
+      const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQPlsQGGPnNGCyKERjwFsvFMNwFIikGZdoq036-rUisRxj_4WYX5FaU38pp9TCozVx/exec';
+      
+      if (GOOGLE_APP_SCRIPT_URL !== 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL') {
+         fetch(GOOGLE_APP_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ blushReason: input, timestamp: new Date().toISOString() })
+         }).catch(e => console.log(e));
+      }
+      
+      card.classList.add('fold-envelope');
+      
+      setTimeout(() => {
+         activateFreeRoam();
+      }, 1800);
+    }
+
+    function activateFreeRoam() {
+       document.getElementById('ui-layer').style.opacity = '0';
+       
+       setTimeout(() => {
+           document.querySelectorAll('.companion-wrapper').forEach(cw => cw.classList.remove('show'));
+           document.querySelectorAll('.dialogue-state').forEach(ds => ds.classList.remove('active'));
+       }, 400);
+
+       const toast = document.getElementById('free-roam-toast');
+       toast.classList.add('show');
+       
+       document.querySelectorAll('.waypoint-marker').forEach(m => {
+          m.classList.add('active');
+          // FIX: Added translate(-50%, -50%) before the scale so they stay perfectly in place
+          m.style.transform = "translate(-50%, -50%) scale(1.3)";
+       });
+       
+       setTimeout(() => { toast.classList.remove('show'); }, 4500);
+    }
+
+
+
+    let beachGiftsClosed = { 1: false, 2: false, 3: false };
+
+    function openBeachGift(n) {
+      const inst = document.getElementById('beach-instruction');
+      if (inst) inst.style.opacity = '0';
+      
+      [1, 2, 3].forEach(id => {
+        if (id !== n && document.getElementById('bgift-'+id).classList.contains('active')) {
+          document.getElementById('bgift-'+id).classList.remove('active');
+          beachGiftsClosed[id] = true;
+        }
+      });
+      document.getElementById('bgift-'+n).classList.add('active');
+    }
+
+    function closeBeachGift(n) {
+      document.getElementById('bgift-'+n).classList.remove('active');
+      beachGiftsClosed[n] = true;
+      
+      if (beachGiftsClosed[1] && beachGiftsClosed[2] && beachGiftsClosed[3]) {
+        setTimeout(() => {
+          document.getElementById('beach-rainbow').style.opacity = '1';
+          document.getElementById('beach-final-msg').classList.add('active');
+        }, 400);
+      }
+    }
+
+    function partClouds() {
+      document.getElementById('finale-env').classList.add('parted');
+    }
+  </script>
+</body>
+</html>
